@@ -14,17 +14,8 @@ import java.util.TreeMap;
  * @author Dell
  */
 public class Main {
-
+    
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        //path dataset harus dibuild sendiri berdasarkan komputer/laptop masing-masing
-
-//        Billy
-//        String path = "D:\\Kuliah\\PTKI\\Data_Tugas_Akhir\\";
-//        Winnie
-//        String path = "F:/kuliah/Sem 7/PTKI/Data_Tugas_Akhir/";
-//        Reggie
-//        String path = "C:\\Users\\reggi\\Documents\\INFORMATIKA 16 UNPAR\\Semester7\\PTKI\\Proyek Akhir\\tugasakhir_ptki\\dataset\\";
-
         //dynamic path directory
         String dir = System.getProperty("user.dir") + "\\dataset\\";
         File[] files = findFilesInDirectory(dir);
@@ -33,6 +24,7 @@ public class Main {
         Normalization norm = new Normalization();
         StopWords sw = new StopWords();
         Lemmatization lemmatization = new Lemmatization();
+        Porter porter = new Porter();
 
         for (int i = 0; i < files.length; i++) {
             System.out.println("===========================");
@@ -41,26 +33,21 @@ public class Main {
             int titik = namaDoc.indexOf(".");
             namaDoc = namaDoc.substring(0, titik);
             System.out.println("Nama Doc : " + namaDoc);
-            
             Scanner input = new Scanner(files[i]);
             int count = 0;
             while (input.hasNext()) {
                 String word = input.next();
-
-                //case folding
-                word = word.toLowerCase();
-
-                //normalization
-                word = norm.replaceWord(word);
+                word = word.toLowerCase(); //case folding
+                word = norm.replaceWord(word); //normalization
                 count = count + 1;
-
-//                get dari map apakah word sudah ada atau belum
-//                jika sudah ada, maka tambahkan, jika tidak, maka buat map baru
                 if (!sw.checkStopWord(word)) {
-                    //lemmatization
-                    word = lemmatization.lemmatize(word);
+                    word = lemmatization.lemmatize(word); //lemmatization
+                    word = porter.stem(word); //porter stemming
                     if (word.length() > 0) {
                         ArrayList<String> valueWord = invertedIndex.get(word);
+                        
+                        //get dari map apakah word sudah ada atau belum
+                        //jika sudah ada, maka tambahkan, jika tidak, maka buat map baru
                         if (valueWord != null) {
                             if (!valueWord.contains(namaDoc)) {
                                 valueWord.add(namaDoc);
@@ -85,12 +72,10 @@ public class Main {
         System.out.println("Jumlah rata-rata words per dokumen : " + jumlahWord / files.length);
     }
 
-//    method untuk membaca file document yang ada
+//    method untuk membaca file document yang ada di sebuah folder
     public static File[] findFilesInDirectory(String directoryPath) {
-
         File folder = new File(directoryPath);
         File[] listOfFiles = folder.listFiles();
-
         System.out.println("Jumlah documents : " + listOfFiles.length);
         return listOfFiles;
     }

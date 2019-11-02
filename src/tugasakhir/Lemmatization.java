@@ -36,7 +36,6 @@ public class Lemmatization {
         for (CoreMap sentence : sentenceList){
             for (CoreLabel word : sentence.get(TokensAnnotation.class)){
                 result = word.lemma();
-//                System.out.println(result);
             }
         }
         return result;
