@@ -23,8 +23,11 @@ public class Main {
 //        Winnie
 //        String path = "F:/kuliah/Sem 7/PTKI/Data_Tugas_Akhir/";
 //        Reggie
-        String path = "C:\\Users\\reggi\\Documents\\INFORMATIKA 16 UNPAR\\Semester7\\PTKI\\Proyek Akhir\\tugasakhir_ptki\\dataset\\";
-        File[] files = findFilesInDirectory(path);
+//        String path = "C:\\Users\\reggi\\Documents\\INFORMATIKA 16 UNPAR\\Semester7\\PTKI\\Proyek Akhir\\tugasakhir_ptki\\dataset\\";
+
+        //dynamic path directory
+        String dir = System.getProperty("user.dir") + "\\dataset\\";
+        File[] files = findFilesInDirectory(dir);
         Map<String, ArrayList> invertedIndex = new TreeMap<String, ArrayList>();
         int jumlahWord = 0;
         Normalization norm = new Normalization();
