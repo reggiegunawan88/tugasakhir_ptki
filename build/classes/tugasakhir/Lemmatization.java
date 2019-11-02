@@ -41,5 +41,10 @@ public class Lemmatization {
         }
         return result;
     }
+    
+    public static void main(String[]args){
+//        Lemmatization l = new Lemmatization();
+//        System.out.println(l.lemmatize("walked"));
+    }
 }
 
