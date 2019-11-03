@@ -5,40 +5,47 @@
  */
 package tugasakhir;
 
+import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 /**
  *
- * @author reggi
+ * @author reggie
  */
 public class Lemmatization {
 
-    public Lemmatization() {
-    }
-    
-    public String lemmatize(String text){
-        String result = "";
-        Properties props = new Properties();
-        props.put("annotators", "tokenize, ssplit, pos, lemma");
-        
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-        Annotation document = new Annotation(text);
-        pipeline.annotate(document);
-        
-        List<CoreMap> sentenceList = document.get(SentencesAnnotation.class);
-        for (CoreMap sentence : sentenceList){
-            for (CoreLabel word : sentence.get(TokensAnnotation.class)){
-                result = word.lemma();
-            }
-        }
-        return result;
-    }
-}
+    protected StanfordCoreNLP pipeline;
 
+    public Lemmatization() {
+        // Create StanfordCoreNLP object properties, with POS tagging
+        // (required for lemmatization), and lemmatization
+        Properties props;
+        props = new Properties();
+        props.put("annotators", "tokenize, ssplit, pos, lemma");
+        this.pipeline = new StanfordCoreNLP(props);
+    }
+
+    public String lemmatize(String text) {
+        Annotation tokenAnnotation = new Annotation(text);
+        pipeline.annotate(tokenAnnotation);  // necessary for the LemmaAnnotation to be set.
+        List<CoreMap> list = tokenAnnotation.get(SentencesAnnotation.class);
+        String tokenLemma = list
+                .get(0).get(TokensAnnotation.class)
+                .get(0).get(LemmaAnnotation.class);
+        return tokenLemma;
+    }
+
+//    public static void main(String[] args) {
+//        String text = "announced";
+//        Lemmatization lem = new Lemmatization();
+//        System.out.println(lem.lemmatize(text));
+//    }
+}
