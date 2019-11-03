@@ -8,6 +8,7 @@ package tugasakhir;
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
@@ -34,13 +35,17 @@ public class Lemmatization {
     }
 
     public String lemmatize(String text) {
+        String result = "";
         Annotation tokenAnnotation = new Annotation(text);
         pipeline.annotate(tokenAnnotation);  // necessary for the LemmaAnnotation to be set.
         List<CoreMap> list = tokenAnnotation.get(SentencesAnnotation.class);
-        String tokenLemma = list
-                .get(0).get(TokensAnnotation.class)
-                .get(0).get(LemmaAnnotation.class);
-        return tokenLemma;
+        for (CoreMap sentence : list) {
+            for(CoreLabel word : sentence.get(TokensAnnotation.class)){
+                result = word.lemma();
+            }
+            
+        }
+        return result;
     }
 
 //    public static void main(String[] args) {
