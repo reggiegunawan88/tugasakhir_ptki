@@ -26,7 +26,7 @@ public class StopWords {
         "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under",
         "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", 
         "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", 
-        "yourselves", "the"};
+        "yourselves", "the", "i"};
         
         ArrayList<String> stopWord = new ArrayList<String>(Arrays.asList(sw));
         return stopWord;
@@ -36,3 +36,5 @@ public class StopWords {
         return stopWord.contains(word);
     }
 }
+
+
