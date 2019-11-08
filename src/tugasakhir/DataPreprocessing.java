@@ -17,8 +17,9 @@ import java.util.TreeMap;
  * @author Dell
  */
 public class DataPreprocessing {
-    
+
     public static void main(String[] args) throws FileNotFoundException, IOException {
+        long startTime = System.currentTimeMillis();
         //dynamic path directory
         String dir = System.getProperty("user.dir") + "\\dataset\\";
         File[] files = findFilesInDirectory(dir);
@@ -28,44 +29,42 @@ public class DataPreprocessing {
         StopWords sw = new StopWords();
         Lemmatization lemmatization = new Lemmatization();
         Porter porter = new Porter();
+        WriteToFile write = new WriteToFile();
 
-        long startTime = System.currentTimeMillis();
         for (int i = 0; i < files.length; i++) {
             System.out.println("===========================");
             System.out.println("Nama File : " + files[i]);
             String namaDoc = files[i].getName();
-            int titik = namaDoc.indexOf(".");
-            namaDoc = namaDoc.substring(0, titik);
             System.out.println("Nama Doc : " + namaDoc);
             Scanner input = new Scanner(files[i]);
             int count = 0;
             String text = "";
-            
-            while(input.hasNext()){
+
+            while (input.hasNext()) {
                 String word = input.next();
                 word = word.toLowerCase(); //case folding
                 word = norm.replaceWord(word); //normalization
-                if(!sw.checkStopWord(word) && word.length() > 0){ //check stop word
+                if (!sw.checkStopWord(word) && word.length() > 0) { //check stop word
                     word = lemmatization.lemmatize(word); //lemmatization
                     word = porter.stem(word); //porter stemming
-                    if (text.length() > 0){
+                    if (text.length() > 0) {
                         text += " ";
                     }
                     text += word;
                 }
                 count++;
             }
+            write.writeUsingFileWriter(namaDoc, text);
 //            for (int j = 0; j < token.size(); j++) {
 //                String kata = porter.stem(token.get(j)); //porter stemming
 //                text += kata + " ";
 //            }
-            
+
 //            for (int j = 0; j < word.length; j++) {
 //                if (!sw.checkStopWord(word[j])) {
 //                    text += word[j] + " "; 
 //                }
 //            }
-            
 //                    if (word.length() > 0) {
 //                        ArrayList<String> valueWord = invertedIndex.get(word);
 //                        
@@ -84,17 +83,15 @@ public class DataPreprocessing {
 //                    }
 //                }
 //            }
-            
             System.out.println(text);
 //          System.out.println("Word count: " + panjang1.length);
             jumlahWord += count;
         }
 
 //        invertedIndex.forEach((key, value) -> System.out.println(key + ":" + value));
-
         long elapsedTime = System.currentTimeMillis() - startTime;
         System.out.printf("Time elapsed: %dms\n", elapsedTime);
-        
+
         System.out.println();
         System.out.println("Jumlah words dari seluruh dokumen : " + jumlahWord);
         System.out.println("Jumlah rata-rata words per dokumen : " + jumlahWord / files.length);
@@ -108,25 +105,3 @@ public class DataPreprocessing {
         return listOfFiles;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
