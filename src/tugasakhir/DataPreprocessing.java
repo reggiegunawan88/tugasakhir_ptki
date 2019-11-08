@@ -1,16 +1,9 @@
 package tugasakhir;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeMap;
 
 /**
  *
@@ -23,7 +16,6 @@ public class DataPreprocessing {
         //dynamic path directory
         String dir = System.getProperty("user.dir") + "\\dataset\\";
         File[] files = findFilesInDirectory(dir);
-        Map<String, ArrayList> invertedIndex = new TreeMap<String, ArrayList>();
         int jumlahWord = 0;
         Normalization norm = new Normalization();
         StopWords sw = new StopWords();
@@ -55,43 +47,11 @@ public class DataPreprocessing {
                 count++;
             }
             write.writeUsingFileWriter(namaDoc, text);
-//            for (int j = 0; j < token.size(); j++) {
-//                String kata = porter.stem(token.get(j)); //porter stemming
-//                text += kata + " ";
-//            }
-
-//            for (int j = 0; j < word.length; j++) {
-//                if (!sw.checkStopWord(word[j])) {
-//                    text += word[j] + " "; 
-//                }
-//            }
-//                    if (word.length() > 0) {
-//                        ArrayList<String> valueWord = invertedIndex.get(word);
-//                        
-//                        //get dari map apakah word sudah ada atau belum
-//                        //jika sudah ada, maka tambahkan, jika tidak, maka buat map baru
-//                        if (valueWord != null) {
-//                            if (!valueWord.contains(namaDoc)) {
-//                                valueWord.add(namaDoc);
-//                                invertedIndex.put(word, valueWord);
-//                            }
-//                        } else {
-//                            ArrayList<String> postingList = new ArrayList<String>();
-//                            postingList.add(namaDoc);
-//                            invertedIndex.put(word, postingList);
-//                        }
-//                    }
-//                }
-//            }
-            System.out.println(text);
-//          System.out.println("Word count: " + panjang1.length);
+//            System.out.println(text);
             jumlahWord += count;
         }
-
-//        invertedIndex.forEach((key, value) -> System.out.println(key + ":" + value));
         long elapsedTime = System.currentTimeMillis() - startTime;
         System.out.printf("Time elapsed: %dms\n", elapsedTime);
-
         System.out.println();
         System.out.println("Jumlah words dari seluruh dokumen : " + jumlahWord);
         System.out.println("Jumlah rata-rata words per dokumen : " + jumlahWord / files.length);
@@ -105,3 +65,4 @@ public class DataPreprocessing {
         return listOfFiles;
     }
 }
+
