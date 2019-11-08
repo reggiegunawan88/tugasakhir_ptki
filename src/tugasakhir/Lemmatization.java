@@ -34,27 +34,18 @@ public class Lemmatization {
         this.pipeline = new StanfordCoreNLP(props);
     }
 
-    public List<String> lemmatize(String documentText)
-    {
-        List<String> lemmas = new LinkedList<String>();
-        // Create an empty Annotation just with the given text
-        Annotation document = new Annotation(documentText);
-        // run all Annotators on this text
-        this.pipeline.annotate(document);
-        // Iterate over all of the sentences found
-        List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-        for(CoreMap sentence: sentences) {
-            // Iterate over all tokens in a sentence
-            for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
-                // Retrieve and add the lemma for each word into the
-                // list of lemmas
-                lemmas.add(token.get(LemmaAnnotation.class));
-            }
-        }
-        return lemmas;
+    public String lemmatize(String text) {
+        Annotation tokenAnnotation = new Annotation(text);
+        pipeline.annotate(tokenAnnotation);  // necessary for the LemmaAnnotation to be set.
+        List<CoreMap> list = tokenAnnotation.get(SentencesAnnotation.class);
+        String tokenLemma = list
+                .get(0).get(TokensAnnotation.class)
+                .get(0).get(LemmaAnnotation.class);
+        return tokenLemma;
     }
 
 //    public static void main(String[] args) {
+//        String text="I'd";
 //        Lemmatization lem = new Lemmatization();
 //        System.out.println(lem.lemmatize(text));
 //    }
