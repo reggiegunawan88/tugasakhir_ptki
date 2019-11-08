@@ -19,10 +19,12 @@ public class WriteToFile {
      */
     public void writeUsingFileWriter(String namaDoc, String data) {
         String dir = System.getProperty("user.dir") + "\\cleaned_dataset\\";
-        File file = new File(dir + namaDoc);
+        File file = new File(dir);
+        file.mkdirs();
+        File doc = new File(dir + namaDoc);
         FileWriter fr = null;
         try {
-            fr = new FileWriter(file);
+            fr = new FileWriter(doc);
             fr.write(data);
         } catch (IOException e) {
             e.printStackTrace();
