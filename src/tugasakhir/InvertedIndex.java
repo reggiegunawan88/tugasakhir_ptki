@@ -56,10 +56,12 @@ public class InvertedIndex {
     }
 
     public void saveMaps() {
-        String path = System.getProperty("user.dir") + "\\inv_idx\\inv_idx.list";
-
+        String folder_path = System.getProperty("user.dir") + "\\inv_idx\\";
+        File file = new File(folder_path);
+        file.mkdirs();
+        String file_path = System.getProperty("user.dir") + "\\inv_idx\\inv_idx.list";
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file_path));
             oos.writeObject(this.getInvIndex());
             oos.close();
         } catch (Exception e) {

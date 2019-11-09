@@ -12,15 +12,15 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         String path_idx = System.getProperty("user.dir") + "\\inv_idx\\";
         File folder_idx = new File(path_idx);
-        File[] contents = folder_idx.listFiles();
-        if (contents.length == 0) {
-            System.out.println("false"); //jika inv idx belum ada
+        if (folder_idx.isDirectory()) {
+            System.out.println("Folder exist"); //jika inv idx belum ada
+
+        } else {
+            System.out.println("Folder doesn't exist, creating the folder..."); //jika inv idx sudah ada
             InvertedIndex invIndex = new InvertedIndex();
             invIndex.createInvertedIndex(findFilesInDirectory(System.getProperty("user.dir") + "\\cleaned_dataset\\"));
             invIndex.saveMaps();
             invIndex.loadMaps();
-        } else {
-            System.out.println("true"); //jika inv idx sudah ada
         }
     }
 
@@ -32,4 +32,3 @@ public class Main {
         return listOfFiles;
     }
 }
-
