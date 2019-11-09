@@ -11,34 +11,24 @@ package tugasakhir;
  */
 public class CalculateRelevance {
     private double precision, recall;
-    private int TP,FP,FN;
     
-    public CalculateRelevance(int TP, int FP, int FN){
-        this.TP=TP;
-        this.FP=FP;
-        this.FN=FN;
+    public CalculateRelevance(){
         this.precision = 0;
         this.recall = 0;
     }
     
-    public void calc_Precision(){
-        this.precision = TP/(TP+FP);
+    public double calc_Precision(int TP, int FP){
+        precision = (double)TP/(TP+FP);
+        return precision;
     }
     
-    public void calc_Recall(){
-        this.recall = TP/(TP+FN);
-    }
-    
-    public double getPrecision(){
-        return this.precision;
-    }
-    
-    public double getRecall(){
-        return this.recall;
+    public double calc_Recall(int TP, int FN){
+        recall = (double)TP/(TP+FN);
+        return recall;
     }
     
     //method ini dipanggil setelah calcPrecision dan calcRecall dipanggil
     public double findF1(){
-        return (2*this.getPrecision()*this.getRecall()) / (this.getPrecision() + this.getRecall());
+        return (2*precision*this.recall) / (precision + recall);
     }
 }

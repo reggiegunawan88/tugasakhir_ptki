@@ -40,11 +40,14 @@ public class Main {
             }
 
             Scanner sc = new Scanner(System.in);
-            System.out.print("Masukan kueri pertama:");
+            System.out.print("Masukan kueri pertama : ");
             String term1 = sc.next();
-            System.out.print("Masukan kueri kedua:");
+            System.out.print("Masukan kueri kedua : ");
             String term2 = sc.next();
-            System.out.print("ketik 0 untuk operasi AND dan ketik 1 untuk operasi OR:");
+            //masing" terms input dilakukan pre-processing dulu
+            term1 = dp.data_processing_query(term1);
+            term2 = dp.data_processing_query(term2);
+            System.out.print("ketik 0 untuk operasi AND dan ketik 1 untuk operasi OR : ");
             int opt = sc.nextInt();
             System.out.println();
             if (opt == 0) {
@@ -71,7 +74,7 @@ public class Main {
             } else if (opt == 1) {
                 List<String> docContainer1 = invertedIndex.get(term1);
                 List<String> docContainer2 = invertedIndex.get(term2);
-                System.out.println("Kueri ditemukan pada dokumen:");
+                System.out.println("Kueri ditemukan pada dokumen :");
                 if (docContainer1.size() > 0) {
                     for (int i = 0; i < docContainer1.size(); i++) {
                         System.out.println(docContainer1.get(i));
@@ -82,7 +85,20 @@ public class Main {
                         System.out.println(docContainer2.get(i));
                     }
                 }
+                System.out.println();
             }
+            System.out.print("Masukkan nilai TP : ");
+            int tp = sc.nextInt();
+            System.out.print("Masukkan nilai FP : ");
+            int fp = sc.nextInt();
+            System.out.print("Msaukkan nilai FN : ");
+            int fn = sc.nextInt();
+            CalculateRelevance sr = new CalculateRelevance();   
+            double x = sr.calc_Precision(tp,fp);
+            double y = sr.calc_Recall(tp, fn);
+            System.out.println("Nilai Precision : " + sr.calc_Precision(tp,fp));
+            System.out.println("Nilai Recall : " + sr.calc_Recall(tp,fn));
+            System.out.println("Nilai F1 : " + sr.findF1());
 
         } //*jika belum ada maka lakukan data preprocessing dahulu dari raw dataset
         else {

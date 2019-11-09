@@ -59,6 +59,22 @@ public class DataPreprocessing {
         System.out.println("Jumlah words dari seluruh dokumen : " + jumlahWord);
         System.out.println("Jumlah rata-rata words per dokumen : " + jumlahWord / files.length);
     }
+    
+    public String data_processing_query(String query) {
+        Normalization norm = new Normalization();
+        StopWords sw = new StopWords();
+        Lemmatization lemmatization = new Lemmatization();
+        Porter porter = new Porter();
+
+            String temp = query;
+            temp = temp.toLowerCase(); //case folding
+            temp = norm.replaceWord(temp); //normalization
+            if (!sw.checkStopWord(temp) && temp.length() > 0) { //check stop word
+                temp = lemmatization.lemmatize(temp); //lemmatization
+                temp = porter.stem(temp); //porter stemming
+            }
+            return temp;
+    }
 
 //    method untuk membaca file document yang ada di sebuah folder
     public static File[] findFilesInDirectory(String directoryPath) {
