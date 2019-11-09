@@ -12,15 +12,14 @@ import java.util.Scanner;
 
 /**
  *
- * @author Dell
+ * @author Tim 7
  */
 public class DataPreprocessing {
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public void data_processing(String dataset_path) throws FileNotFoundException, IOException {
         long startTime = System.currentTimeMillis();
         //dynamic path directory
-        String dir = System.getProperty("user.dir") + "\\dataset\\";
-        File[] files = findFilesInDirectory(dir);
+        File[] files = findFilesInDirectory(dataset_path);
         int jumlahWord = 0;
         Normalization norm = new Normalization();
         StopWords sw = new StopWords();
@@ -52,7 +51,6 @@ public class DataPreprocessing {
                 count++;
             }
             write.writeUsingFileWriter(namaDoc, text);
-//            System.out.println(text);
             jumlahWord += count;
         }
         long elapsedTime = System.currentTimeMillis() - startTime;

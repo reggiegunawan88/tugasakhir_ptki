@@ -85,60 +85,13 @@ public class InvertedIndex {
         }
 
         for (Map.Entry entry : invIndexLoad.entrySet()) {
-//            invIndexLoad.put(entry.getKey().toString(), (List)entry.getValue());
             System.out.println("key: " + entry.getKey() + "; value: " + entry.getValue());
         }
     }
 
-//    public void savingMapIntoFile() throws FileNotFoundException, IOException {
-//        Properties properties = new Properties();
-//        String path = System.getProperty("user.dir") + "\\inv_idx\\";
-//        File file = new File(path);
-//        file.mkdirs();
-//        PrintWriter writer = new PrintWriter(path + "invertedIndex.txt");
-//        for (Map.Entry<String, List> entry : invertedIndex.entrySet()) {
-//            writer.println(entry.getKey() + " " + entry.getValue());
-//            properties.put(entry.getKey(), entry.getValue());
-//            System.out.println(entry.getKey() + " => " + entry.getValue());
-//        }
-//        properties.store(new FileOutputStream("invertedIndex.properties"), null);
-//        writer.close();
-//    }
-
-//    public static Map<String, ArrayList> loadMapFromFile() throws FileNotFoundException, IOException {
-//        Map<String, ArrayList> invIndex = new HashMap<String, ArrayList>();
-//        Properties properties = new Properties();
-//        properties.load(new FileInputStream("invertedIndex.properties"));
-
-//        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("invertedIndex.properties"));
-//        out.writeObject(invIndex);
-//        out.close();
-//
-//        for (String key : properties.stringPropertyNames()) {
-//            System.out.println(key + " => " + properties.get(key).getClass());
-////            invIndex.put(key, (ArrayList)properties.get(key));
-//        }
-//        return invIndex;
-//    }
-
     public Map<String, List> getInvIndex() {
         return this.invertedIndex;
     }
-
-//    public static void main(String[] args) throws IOException {
-//        InvertedIndex invIndex = new InvertedIndex();
-//        createInvertedIndex(findFilesInDirectory(System.getProperty("user.dir") + "\\cleaned_dataset\\"));
-//        invIndex.saveMaps();
-//        invIndex.loadMaps();
-
-//        Map<String, ArrayList> hasil = loadMapFromFile();
-//
-//        for (Map.Entry<String, ArrayList> entry : hasil.entrySet()) {
-////            writer.println(entry.getKey() + ", " + entry.getValue());
-////            properties.put(entry.getKey(), entry.getValue());
-//            System.out.println(entry.getKey() + " => " + entry.getValue());
-//        }
-//    }
 
     public static File[] findFilesInDirectory(String directoryPath) {
         File folder = new File(directoryPath);
