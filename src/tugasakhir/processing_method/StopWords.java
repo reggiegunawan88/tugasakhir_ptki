@@ -1,17 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package tugasakhir;
-
+package tugasakhir.processing_method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- *
- * @author reggi
- */
 public class StopWords {
     private ArrayList<String> stopWord;
     
@@ -36,7 +26,7 @@ public class StopWords {
         "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under",
         "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", 
         "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", 
-        "yourselves", "the"};
+        "yourselves", "the", "i"};
         
         ArrayList<String> stopWord = new ArrayList<String>(Arrays.asList(sw));
         return stopWord;
@@ -46,3 +36,5 @@ public class StopWords {
         return stopWord.contains(word);
     }
 }
+
+
