@@ -1,4 +1,4 @@
-package tugasakhir;
+package tugasakhir.processing_method;
 import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Porter {

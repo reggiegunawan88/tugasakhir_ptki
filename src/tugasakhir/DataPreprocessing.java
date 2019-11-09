@@ -1,5 +1,10 @@
 package tugasakhir;
 
+import tugasakhir.processing_method.Normalization;
+import tugasakhir.processing_method.Porter;
+import tugasakhir.processing_method.StopWords;
+import tugasakhir.processing_method.Lemmatization;
+import tugasakhir.processing_method.WriteToFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

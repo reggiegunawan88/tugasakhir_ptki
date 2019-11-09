@@ -1,4 +1,4 @@
-package tugasakhir;
+package tugasakhir.processing_method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
