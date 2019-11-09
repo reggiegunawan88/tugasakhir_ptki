@@ -71,22 +71,20 @@ public class InvertedIndex {
 
     public void loadMaps() {
         String path = System.getProperty("user.dir") + "\\inv_idx\\inv_idx.list";
-        Map<String, List> invIndexLoad = new TreeMap<String, List>();
-
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
             Object readMap = ois.readObject();
             if (readMap != null && readMap instanceof TreeMap) {
-                invIndexLoad.putAll((TreeMap) readMap);
+                this.invertedIndex.putAll((TreeMap) readMap);
             }
             ois.close();
         } catch (Exception e) {
             // Catch exceptions
         }
 
-        for (Map.Entry entry : invIndexLoad.entrySet()) {
-            System.out.println("key: " + entry.getKey() + "; value: " + entry.getValue());
-        }
+//        for (Map.Entry entry : invIndexLoad.entrySet()) {
+//            System.out.println("key: " + entry.getKey() + "; value: " + entry.getValue());
+//        }
     }
 
     public Map<String, List> getInvIndex() {
