@@ -174,6 +174,7 @@ public class Mochi extends javax.swing.JFrame {
         
         for(int i=0; i<this.input.length; i++){
             docContainer = invertedIndex.get(this.result[i]);
+            int h = 0;
             if (docContainer.size() > 0) {
                 for (int j = 0; j < docContainer.size(); j++) {
                     this.output += docContainer.get(j) + "\n";
