@@ -29,7 +29,7 @@ public class Mochi extends javax.swing.JFrame {
     File cleaned_dataset = new File(System.getProperty("user.dir") + "\\cleaned_dataset\\");
     DataPreprocessing dp = new DataPreprocessing();
     InvertedIndex invIndex = new InvertedIndex();
-    Map<String, List> invertedIndex = new TreeMap<String, List>();
+    Map<String, Map<String, Integer>> invertedIndex = new TreeMap<String, Map<String, Integer>>();
     private String[] input = new String[]{};
     private String[] result = new String[]{};
     private String output = "";
