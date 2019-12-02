@@ -179,6 +179,7 @@ public class Mochi extends javax.swing.JFrame {
         Map<String, Integer> docContainer = new HashMap<String, Integer>();
         for(int i=0; i<this.input.length; i++){
             docContainer = invertedIndex.get(this.result[i]);
+            if(docContainer.size()<0)break;
             for (Map.Entry entry : docContainer.entrySet()) {
                 tempt = (String) entry.getKey();
                 this.output += tempt + "\n";
@@ -225,6 +226,7 @@ public class Mochi extends javax.swing.JFrame {
                     int idxKata1 = 0;
                     int idxKata2 = 0;
 
+                    if(docContainer3.size()<0&&docContainer4.size()<0)break;
                     while (idxKata1 < docContainer3.size() && idxKata2 < docContainer4.size()) {
                         if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) < 0) {
                             idxKata2++;
@@ -290,10 +292,10 @@ public class Mochi extends javax.swing.JFrame {
   
             try { 
                 BufferedReader br = new BufferedReader(new FileReader(file));
- 
-                while ((br.readLine()) != null) 
-                    st = br.readLine() + "\n";
-                    break;
+                st += this.tokens[i] + "\n";
+                for(int j=0; j<1; j++){
+                    st += br.readLine() + "\n";
+                }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
