@@ -53,9 +53,9 @@ public class TFIDF {
         return idf;
     }
     
-//    public Map<String, Integer> tfIdf (Map<String, Integer> tfQuery, ArrayList<String> namaDoc)
+//    public Map<String, Double> tfIdf (Map<String, Integer> tfQuery, ArrayList<String> namaDoc)
 //    {
-//        //cari nilai tf-nya
+        //cari nilai tf-nya
 //        Map<String, Integer> tfDoc = this.invertedIndex.get(word);
 //    }
     
@@ -76,4 +76,5 @@ public class TFIDF {
 //        return tf(doc, term) * idf(docs, term);
 //    }
 }
+
 
