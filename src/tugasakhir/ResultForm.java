@@ -20,39 +20,53 @@ import javax.swing.JComboBox;
  */
 public class ResultForm extends javax.swing.JFrame {
     private String output, operasi, isiDoc;
-    private String[] tokens;
-    private double timer;
+    private String[] tokens, tokenDocs;
+    private float timer;
     isiDokumen isiDok;
     Mochi mochi;
 
     /**
      * Creates new form ResultForm
      */
-    public ResultForm(String output, String isiDoc, String operasi, double timer) throws IOException {
+    public ResultForm(String output, String isiDoc, String operasi, float timer) throws IOException {
         this.mochi = new Mochi();
         this.output = output;
         this.operasi = operasi;
         this.isiDoc = isiDoc;
+        this.timer = timer;
         initComponents();
         initDisplay();
-        this.timer = timer;
-//        this.resultArea.setText(isiDoc);
     }
     
     private void initDisplay() {
-        this.tokens = this.output.split("\n");
-        for(int i=1; i<=this.tokens.length; i++){
-            this.comboBoxTop.addItem(i);
-        }
-        this.comboBoxTop.setSelectedItem(this.comboBoxTop.getSize());
-        this.jLabel1.setText("Kueri dengan operasi " + this.operasi + " ditemukan pada dokumen :");
-        if(isiDoc !=""){
-            this.resultArea.setText(isiDoc);
-        } else {
-            this.resultArea.setText("dokumen tidak ditemukan");
+        int l = 0;
+        if(this.output!=""){
+            this.tokens = this.output.split("\n");
+            l = this.tokens.length;
+            for(int i=1; i<=this.tokens.length; i++){
+                this.comboBoxTop.addItem(i);
+            }
         }
         
+        this.comboBoxTop.setSelectedItem(this.comboBoxTop.getSize());
+      
+        if(this.isiDoc!=""){
+           String st = "";
+            this.tokenDocs = this.isiDoc.split("\n");
+            for(int i=0; i<this.tokens.length; i++){
+                st += this.tokens[i] + "\n" + this.tokenDocs[i] + "\n";
+            }
+            this.jLabel1.setText("Kueri dengan operasi " + this.operasi + " ditemukan pada dokumen :");
+            if(st !=""){
+                this.resultArea.setText(st);
+            } else {
+                this.resultArea.setText("dokumen tidak ditemukan");
+            }  
+        }
+       
+        this.labelJumlahDocs.setText("jumlah doc: " + l);
         this.jLabel2.setText("waktu untuk memproses kueri: " + this.timer + " detik");
+        int h = 0;
     }
 
     /**
@@ -73,6 +87,7 @@ public class ResultForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         textDoc = new javax.swing.JTextField();
         lihatBtn = new javax.swing.JButton();
+        labelJumlahDocs = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -133,7 +148,9 @@ public class ResultForm extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(labelJumlahDocs))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(textDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -153,11 +170,17 @@ public class ResultForm extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lihatBtn)
-                    .addComponent(textDoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lihatBtn)
+                            .addComponent(textDoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelJumlahDocs)
+                        .addGap(22, 22, 22)))
                 .addComponent(jLabel2)
                 .addGap(34, 34, 34))
         );
@@ -181,7 +204,7 @@ public class ResultForm extends javax.swing.JFrame {
         this.output = "";
         int j = (int) this.comboBoxTop.getSelectedItem();
         for(int i=0; i<j; i++){
-            this.output += this.tokens[i] + "\n";
+            this.output += this.tokens[i] + "\n" + this.tokenDocs[i] + "\n";
         }
         this.resultArea.setText(this.output);
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -250,6 +273,7 @@ public class ResultForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelJumlahDocs;
     private javax.swing.JButton lihatBtn;
     private javax.swing.JTextArea resultArea;
     private javax.swing.JTextField textDoc;

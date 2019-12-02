@@ -35,7 +35,7 @@ public class LanguageModel {
     }
 
 //    public Map<String, Double> getResult(ArrayList namaDoc, ArrayList words) throws IOException {
-    public static Map<Double, String> getResult(ArrayList namaDoc, ArrayList words, Map<String, Map<String, Integer>> invertedIndex) throws IOException {
+    public Map<Double, String> getResult(ArrayList namaDoc, ArrayList words, Map<String, Map<String, Integer>> invertedIndex) throws IOException {
 
         String dataset_path = System.getProperty("user.dir") + "\\cleaned_dataset\\";
         File folder = new File(dataset_path);
@@ -120,35 +120,35 @@ public class LanguageModel {
         return listOfFiles;
     }
 
-    public static void main(String[] args) throws IOException {
-        LanguageModel lm = new LanguageModel();
-        Map<String, Map<String, Integer>> invertedIndex = new TreeMap<String, Map<String, Integer>>();
-        InvertedIndex invIndex = new InvertedIndex();
-        invIndex.loadMaps();
-        invertedIndex = invIndex.getInvIndex();
-
-        ArrayList namaDoc = new ArrayList();
-        namaDoc.add("Doc001");
-        namaDoc.add("Doc005");
-        namaDoc.add("Doc016");
-        namaDoc.add("Doc021");
-        namaDoc.add("Doc065");
-        namaDoc.add("Doc068");
-        namaDoc.add("Doc069");
-        namaDoc.add("Doc098");
-        namaDoc.add("Doc099");
-        namaDoc.add("Doc124");
-
-        ArrayList words = new ArrayList();
-        words.add("flower");
-        words.add("famin");
-        words.add("barren");
-
-        Map<Double, String> res = getResult(namaDoc, words, invertedIndex);
-        
-        for (Map.Entry entry : res.entrySet()) {
-            System.out.println("key: " + entry.getKey() + "; value: " + entry.getValue());
-        }
-    }
+//    public static void main(String[] args) throws IOException {
+//        LanguageModel lm = new LanguageModel();
+//        Map<String, Map<String, Integer>> invertedIndex = new TreeMap<String, Map<String, Integer>>();
+//        InvertedIndex invIndex = new InvertedIndex();
+//        invIndex.loadMaps();
+//        invertedIndex = invIndex.getInvIndex();
+//
+//        ArrayList namaDoc = new ArrayList();
+//        namaDoc.add("Doc001");
+//        namaDoc.add("Doc005");
+//        namaDoc.add("Doc016");
+//        namaDoc.add("Doc021");
+//        namaDoc.add("Doc065");
+//        namaDoc.add("Doc068");
+//        namaDoc.add("Doc069");
+//        namaDoc.add("Doc098");
+//        namaDoc.add("Doc099");
+//        namaDoc.add("Doc124");
+//
+//        ArrayList words = new ArrayList();
+//        words.add("flower");
+//        words.add("famin");
+//        words.add("barren");
+//
+//        Map<Double, String> res = getResult(namaDoc, words, invertedIndex);
+//        
+//        for (Map.Entry entry : res.entrySet()) {
+//            System.out.println("key: " + entry.getKey() + "; value: " + entry.getValue());
+//        }
+//    }
 }
 

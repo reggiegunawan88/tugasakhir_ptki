@@ -11,12 +11,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tugasakhir.LanguageModel;
 import static tugasakhir.Main.findFilesInDirectory;
 
 /**
@@ -34,9 +36,13 @@ public class Mochi extends javax.swing.JFrame {
     private String[] input = new String[]{};
     private String[] result = new String[]{};
     private String[] tokens = new String[]{};
+    private String[] tokens2 = new String[]{};
     private String output = "";
     private String operasi = "";
-    private double timer;
+    private String operasiM = "";
+    private float timer;
+    private LanguageModel lm;
+    private BM25 bm25;
 
     /**
      * Creates new form Mochi
@@ -65,6 +71,9 @@ public class Mochi extends javax.swing.JFrame {
             invIndex.loadMaps();
             invertedIndex = invIndex.getInvIndex();
         }
+        
+        this.lm = new LanguageModel();
+        this.bm25 = new BM25(invertedIndex);
     }
 
     /**
@@ -77,12 +86,17 @@ public class Mochi extends javax.swing.JFrame {
     private void initComponents() {
 
         jFrame1 = new javax.swing.JFrame();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         searchButton = new javax.swing.JButton();
         orButton = new javax.swing.JButton();
         andButton = new javax.swing.JButton();
         inputTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lmBtn = new javax.swing.JRadioButton();
+        bm25Btn = new javax.swing.JRadioButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -94,6 +108,8 @@ public class Mochi extends javax.swing.JFrame {
             jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
+
+        jRadioButton1.setText("jRadioButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,24 +139,47 @@ public class Mochi extends javax.swing.JFrame {
 
         jLabel2.setText("Pilih operasi yang ingin dilakukan:");
 
+        jLabel3.setText("Pilih metode: ");
+
+        lmBtn.setText("Language Model");
+        lmBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lmBtnActionPerformed(evt);
+            }
+        });
+
+        bm25Btn.setText("BM25");
+        bm25Btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bm25BtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(inputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchButton))
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(orButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(andButton)))
-                .addContainerGap(67, Short.MAX_VALUE))
+                    .addComponent(bm25Btn)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(inputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(searchButton))
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(orButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(andButton)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lmBtn)
+                            .addGap(176, 176, 176))))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +196,13 @@ public class Mochi extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(orButton)
                     .addComponent(andButton))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lmBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bm25Btn)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -179,20 +224,23 @@ public class Mochi extends javax.swing.JFrame {
         Map<String, Integer> docContainer = new HashMap<String, Integer>();
         for(int i=0; i<this.input.length; i++){
             docContainer = invertedIndex.get(this.result[i]);
-            if(docContainer.size()<0)break;
+            if(docContainer==null)break;
             for (Map.Entry entry : docContainer.entrySet()) {
                 tempt = (String) entry.getKey();
                 this.output += tempt + "\n";
             } 
-        }     
-        docContainer.clear();
+        } 
+        if(docContainer!=null){
+            docContainer.clear();
+        }
+       
         try {  
             ResultForm rf = new ResultForm("","","",0);
         } catch (IOException ex) {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
         long end = System.currentTimeMillis();
-        this.timer = ((end-start)*1.0)/1000*1.0;
+        this.timer = ((end-start))/1000f;
     }//GEN-LAST:event_orButtonActionPerformed
 
     private void andButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_andButtonActionPerformed
@@ -276,41 +324,130 @@ public class Mochi extends javax.swing.JFrame {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
         long end = System.currentTimeMillis();
-        this.timer = ((end-start)*1.0)/1000*1.0;
+        this.timer = ((end-start))/1000;
     }//GEN-LAST:event_andButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         String result = "";
         String st = "";
-        if(this.operasi.equals("OR")||this.operasi.equals("")){
+        if(this.operasi.equals("")){
             this.orButtonActionPerformed(evt);
         }
-        this.tokens = this.output.split("\n");
-        for(int i=0; i<tokens.length; i++){
-             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt"); 
-  
-            try { 
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                st += this.tokens[i] + "\n";
-                for(int j=0; j<1; j++){
-                    st += br.readLine() + "\n";
+        
+        if(this.output!=""){
+            this.tokens = this.output.split("\n");
+//            for(int i=0; i<tokens.length; i++){
+//            File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt"); 
+//  
+//            try { 
+//                BufferedReader br = new BufferedReader(new FileReader(file));
+////                st += this.tokens[i] + "\n";
+//                for(int j=0; j<1; j++){
+//                    st += br.readLine() + "\n";
+//                }
+//            } catch (FileNotFoundException ex) {
+//                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (IOException ex) {
+//                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+            
+            if(this.operasiM.equals("lm")){
+                ArrayList<String> namaDoc = new ArrayList<String>(Arrays.asList(this.tokens));
+                ArrayList<String> words = new ArrayList<String>(Arrays.asList(this.result));
+                Map<String, Double> res = this.bm25.getBM25(namaDoc, words);
+                int k=0;
+                this.tokens2 = new String[this.tokens.length];
+                for (Map.Entry entry : res.entrySet()) {
+                    String temp1 = entry.getValue() + "";
+                    String temp2 = entry.getKey() + "";
+                    this.tokens[k] = temp1 + "";
+                    this.tokens2[k] = temp1 + "->" + temp2;
+                    k++;
                 }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+                for(int i=0; i<tokens.length; i++){
+                    File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt");
+                    
+                    try { 
+                        BufferedReader br = new BufferedReader(new FileReader(file));
+                        //                st += this.tokens[i] + "\n";
+                        for(int j=0; j<1; j++){
+                            st += br.readLine() + "\n";
+                        }
+                        
+                    } catch (IOException ex) {
+                        Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } else {
+                ArrayList<String> namaDoc = new ArrayList<String>(Arrays.asList(this.tokens));
+                ArrayList<String> words = new ArrayList<String>(Arrays.asList(this.result));
+                try
+                {
+                    Map<Double, String> res = this.lm.getResult(namaDoc, words, invertedIndex);
+                    int k=0;
+                    this.tokens2 = new String[this.tokens.length];
+                    for (Map.Entry entry : res.entrySet()) {
+                        String temp1 = entry.getValue() + "";
+                        String temp2 = entry.getKey() + "";
+                        this.tokens[k] = temp1 + "";
+                        this.tokens2[k] = temp1 + "->" + temp2;
+                        k++;
+                    }
+                    
+                    for(int i=0; i<tokens.length; i++){
+                    File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt"); 
+
+                    try { 
+                        BufferedReader br = new BufferedReader(new FileReader(file));
+        //                st += this.tokens[i] + "\n";
+                        for(int j=0; j<1; j++){
+                            st += br.readLine() + "\n";
+                        }
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+                }              
+                }
+                } catch (IOException ex) {
+                        Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            ResultForm rf = null;
+            this.output = "";
+            for(int h=0; h<this.tokens.length; h++){
+                this.output += this.tokens2[h] + "\n";
+            }
+            try {
+                rf = new ResultForm(this.output, st, this.operasi,this.timer);
             } catch (IOException ex) {
                 Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        this.setVisible(false);
-        ResultForm rf = null;
-        try {
-            rf = new ResultForm(this.output, st, this.operasi,this.timer);
-        } catch (IOException ex) {
-            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        rf.setVisible(true); 
+            rf.setVisible(true); 
+        } else {
+            this.setVisible(false);
+            ResultForm rf = null;
+            try {
+                rf = new ResultForm("", "", this.operasi,this.timer);
+            } catch (IOException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            rf.setVisible(true); 
+        }   
     }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void lmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lmBtnActionPerformed
+        // TODO add your handling code here:
+        this.operasiM = "lm";
+//        Map<Double, String> res = this.lm.getResult(Arrays.asList(this.tokens), this.result, invertedIndex);
+        this.bm25Btn.setSelected(false);
+    }//GEN-LAST:event_lmBtnActionPerformed
+
+    private void bm25BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bm25BtnActionPerformed
+        // TODO add your handling code here:
+        this.operasiM = "bm";
+        this.lmBtn.setSelected(false);
+    }//GEN-LAST:event_bm25BtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -353,10 +490,15 @@ public class Mochi extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton andButton;
+    private javax.swing.JRadioButton bm25Btn;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField inputTextField;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton lmBtn;
     private javax.swing.JButton orButton;
     private javax.swing.JButton searchButton;
     // End of variables declaration//GEN-END:variables
