@@ -6,7 +6,6 @@
 package tugasakhir;
 
 import java.io.IOException;
-import javax.swing.JComboBox;
 
 /**
  *
@@ -14,32 +13,19 @@ import javax.swing.JComboBox;
  */
 public class ResultForm extends javax.swing.JFrame {
     private String output, operasi;
-    private String[] tokens;
-    private float timer;
     Mochi mochi;
 
     /**
      * Creates new form ResultForm
      */
-    public ResultForm(String output, String isiDoc, String operasi, float timer) throws IOException {
+    public ResultForm(String output, String isiDoc, String operasi) throws IOException {
         this.mochi = new Mochi();
         this.output = output;
         this.operasi = operasi;
         initComponents();
-        initDisplay();
-        this.timer = timer;
-//        this.resultArea.setText(isiDoc);
-    }
-    
-    private void initDisplay() {
-        this.tokens = this.output.split("\n");
-        for(int i=1; i<=this.tokens.length; i++){
-            this.comboBoxTop.addItem(i);
-        }
-        this.comboBoxTop.setSelectedItem(this.comboBoxTop.getSize());
         this.jLabel1.setText("Kueri dengan operasi " + this.operasi + " ditemukan pada dokumen :");
         this.resultArea.setText(output);
-        this.jLabel2.setText("waktu untuk memproses kueri: " + this.timer + " detik");
+//        this.resultArea.setText(isiDoc);
     }
 
     /**
@@ -55,9 +41,6 @@ public class ResultForm extends javax.swing.JFrame {
         resultArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        comboBoxTop = new javax.swing.JComboBox<>();
-        jButton2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,6 +49,7 @@ public class ResultForm extends javax.swing.JFrame {
         jScrollPane1.setViewportView(resultArea);
 
         jLabel1.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        jLabel1.setText("Result:");
 
         jButton1.setText("Back");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -74,59 +58,32 @@ public class ResultForm extends javax.swing.JFrame {
             }
         });
 
-        comboBoxTop.setMaximumRowCount(10);
-        comboBoxTop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxTopActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("top");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(comboBoxTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(comboBoxTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jLabel2)
-                .addGap(44, 44, 44))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -137,21 +94,6 @@ public class ResultForm extends javax.swing.JFrame {
         this.setVisible(false);
         mochi.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void comboBoxTopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTopActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboBoxTopActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        this.resultArea.replaceSelection("");
-        this.output = "";
-        int j = (int) this.comboBoxTop.getSelectedItem();
-        for(int i=0; i<j; i++){
-            this.output += this.tokens[i] + "\n";
-        }
-        this.resultArea.setText(this.output);
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -189,11 +131,8 @@ public class ResultForm extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<Integer> comboBoxTop;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea resultArea;
     // End of variables declaration//GEN-END:variables
