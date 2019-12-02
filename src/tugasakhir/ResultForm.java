@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
  * @author Dell
  */
 public class ResultForm extends javax.swing.JFrame {
+
     private String output, operasi, isiDoc;
     private String[] tokens, tokenDocs;
     private float timer;
@@ -37,7 +38,7 @@ public class ResultForm extends javax.swing.JFrame {
         initComponents();
         initDisplay();
     }
-    
+
     private void initDisplay() {
         int l = 0;
         if(this.output!=""){
@@ -213,20 +214,22 @@ public class ResultForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         String doc = this.textDoc.getText();
         String st = "";
-     
-        File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + doc + ".txt"); 
-  
-       try { 
+        String relative_path = System.getProperty("user.dir");
+
+        File file = new File(relative_path+ "\\dataset\\" + doc + ".txt");
+
+        try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String res = "";
-            while ((res = br.readLine()) != null) 
+            while ((res = br.readLine()) != null) {
                 st += res + "\n";
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         isiDok = new isiDokumen(st, doc);
         isiDok.setVisible(true);
     }//GEN-LAST:event_lihatBtnActionPerformed
