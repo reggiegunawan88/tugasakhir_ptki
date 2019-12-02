@@ -13,18 +13,19 @@ import javax.swing.JComboBox;
  * @author Dell
  */
 public class ResultForm extends javax.swing.JFrame {
-    private String output, operasi;
+    private String output, operasi, isiDoc;
     private String[] tokens;
-    private float timer;
+    private double timer;
     Mochi mochi;
 
     /**
      * Creates new form ResultForm
      */
-    public ResultForm(String output, String isiDoc, String operasi, float timer) throws IOException {
+    public ResultForm(String output, String isiDoc, String operasi, double timer) throws IOException {
         this.mochi = new Mochi();
         this.output = output;
         this.operasi = operasi;
+        this.isiDoc = isiDoc;
         initComponents();
         initDisplay();
         this.timer = timer;
@@ -38,7 +39,7 @@ public class ResultForm extends javax.swing.JFrame {
         }
         this.comboBoxTop.setSelectedItem(this.comboBoxTop.getSize());
         this.jLabel1.setText("Kueri dengan operasi " + this.operasi + " ditemukan pada dokumen :");
-        this.resultArea.setText(output);
+        this.resultArea.setText(output + isiDoc);
         this.jLabel2.setText("waktu untuk memproses kueri: " + this.timer + " detik");
     }
 

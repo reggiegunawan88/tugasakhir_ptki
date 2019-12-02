@@ -33,9 +33,10 @@ public class Mochi extends javax.swing.JFrame {
     Map<String, Map<String, Integer>> invertedIndex = new TreeMap<String, Map<String, Integer>>();
     private String[] input = new String[]{};
     private String[] result = new String[]{};
+    private String[] tokens = new String[]{};
     private String output = "";
     private String operasi = "";
-    private float timer;
+    private double timer;
 
     /**
      * Creates new form Mochi
@@ -190,7 +191,7 @@ public class Mochi extends javax.swing.JFrame {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
         long end = System.currentTimeMillis();
-        this.timer = (end-start)/1000f;
+        this.timer = ((end-start)*1.0)/1000*1.0;
     }//GEN-LAST:event_orButtonActionPerformed
 
     private void andButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_andButtonActionPerformed
@@ -273,7 +274,7 @@ public class Mochi extends javax.swing.JFrame {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
         long end = System.currentTimeMillis();
-        this.timer = (end-start)/1000f;
+        this.timer = ((end-start)*1.0)/1000*1.0;
     }//GEN-LAST:event_andButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
@@ -283,21 +284,22 @@ public class Mochi extends javax.swing.JFrame {
         if(this.operasi.equals("OR")||this.operasi.equals("")){
             this.orButtonActionPerformed(evt);
         }
-//        String tokens[] = this.output.split("\n");
-//        for(int i=0; i<tokens.length; i++){
-//             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset" + tokens[i]); 
-//  
-//            try { 
-//                BufferedReader br = new BufferedReader(new FileReader(file));
-// 
-//                while ((br.readLine()) != null) 
-//                   st = br.readLine();
-//            } catch (FileNotFoundException ex) {
-//                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (IOException ex) {
-//                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        this.tokens = this.output.split("\n");
+        for(int i=0; i<tokens.length; i++){
+             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt"); 
+  
+            try { 
+                BufferedReader br = new BufferedReader(new FileReader(file));
+ 
+                while ((br.readLine()) != null) 
+                    st = br.readLine() + "\n";
+                    break;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         this.setVisible(false);
         ResultForm rf = null;
         try {
