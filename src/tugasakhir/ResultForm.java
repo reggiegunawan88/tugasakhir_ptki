@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
  * @author Dell
  */
 public class ResultForm extends javax.swing.JFrame {
+
     private String output, operasi, isiDoc;
     private String[] tokens;
     private double timer;
@@ -38,20 +39,20 @@ public class ResultForm extends javax.swing.JFrame {
         this.timer = timer;
 //        this.resultArea.setText(isiDoc);
     }
-    
+
     private void initDisplay() {
         this.tokens = this.output.split("\n");
-        for(int i=1; i<=this.tokens.length; i++){
+        for (int i = 1; i <= this.tokens.length; i++) {
             this.comboBoxTop.addItem(i);
         }
         this.comboBoxTop.setSelectedItem(this.comboBoxTop.getSize());
         this.jLabel1.setText("Kueri dengan operasi " + this.operasi + " ditemukan pada dokumen :");
-        if(isiDoc !=""){
+        if (isiDoc != "") {
             this.resultArea.setText(isiDoc);
         } else {
             this.resultArea.setText("dokumen tidak ditemukan");
         }
-        
+
         this.jLabel2.setText("waktu untuk memproses kueri: " + this.timer + " detik");
     }
 
@@ -180,7 +181,7 @@ public class ResultForm extends javax.swing.JFrame {
         this.resultArea.replaceSelection("");
         this.output = "";
         int j = (int) this.comboBoxTop.getSelectedItem();
-        for(int i=0; i<j; i++){
+        for (int i = 0; i < j; i++) {
             this.output += this.tokens[i] + "\n";
         }
         this.resultArea.setText(this.output);
@@ -190,20 +191,22 @@ public class ResultForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         String doc = this.textDoc.getText();
         String st = "";
-     
-        File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + doc + ".txt"); 
-  
-       try { 
+        String relative_path = System.getProperty("user.dir");
+
+        File file = new File(relative_path+ "\\dataset\\" + doc + ".txt");
+
+        try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String res = "";
-            while ((res = br.readLine()) != null) 
+            while ((res = br.readLine()) != null) {
                 st += res + "\n";
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         isiDok = new isiDokumen(st, doc);
         isiDok.setVisible(true);
     }//GEN-LAST:event_lihatBtnActionPerformed
