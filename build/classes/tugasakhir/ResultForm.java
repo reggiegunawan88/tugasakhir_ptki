@@ -5,18 +5,21 @@
  */
 package tugasakhir;
 
+import java.io.IOException;
+
 /**
  *
  * @author Dell
  */
 public class ResultForm extends javax.swing.JFrame {
     private String output, operasi;
-    Mochi mochi = new Mochi();
+    Mochi mochi;
 
     /**
      * Creates new form ResultForm
      */
-    public ResultForm(String output, String isiDoc, String operasi) {
+    public ResultForm(String output, String isiDoc, String operasi) throws IOException {
+        this.mochi = new Mochi();
         this.output = output;
         this.operasi = operasi;
         initComponents();

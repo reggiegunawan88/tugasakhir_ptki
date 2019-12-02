@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,38 +30,39 @@ public class Mochi extends javax.swing.JFrame {
     File cleaned_dataset = new File(System.getProperty("user.dir") + "\\cleaned_dataset\\");
     DataPreprocessing dp = new DataPreprocessing();
     InvertedIndex invIndex = new InvertedIndex();
-    Map<String, List> invertedIndex = new TreeMap<String, List>();
+    Map<String, Map<String, Integer>> invertedIndex = new TreeMap<String, Map<String, Integer>>();
     private String[] input = new String[]{};
     private String[] result = new String[]{};
     private String output = "";
     private String operasi = "";
+    private float timer;
 
     /**
      * Creates new form Mochi
      */
-    public Mochi() {
+    public Mochi() throws FileNotFoundException, IOException {
         initPrepocessing();
         initComponents();
     }
     
-    private void initPrepocessing() {
-        if (cleaned_dataset.isDirectory()) {
-            if (folder_idx.isDirectory()) {
-                System.out.println("Inverted Index found"); //jika inv idx belum ada
-                invIndex.loadMaps();
-                invertedIndex = invIndex.getInvIndex();
-
-            } else {
-                System.out.println("Inverted Index not found, creating new.."); //jika inv idx sudah ada
-                try {
-                    invIndex.createInvertedIndex(findFilesInDirectory(System.getProperty("user.dir") + "\\cleaned_dataset\\"));
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                invIndex.saveMaps();
-                invIndex.loadMaps();
-                invertedIndex = invIndex.getInvIndex();
-            }
+    private void initPrepocessing() throws FileNotFoundException, IOException {
+        if (!cleaned_dataset.isDirectory()) {
+            dp.data_processing(dataset_path); //lakukan data preprocessing
+            invIndex.createInvertedIndex(findFilesInDirectory(System.getProperty("user.dir") + "\\cleaned_dataset\\")); //bikin inv index
+            invIndex.saveMaps();
+            invIndex.loadMaps();
+        }
+        
+        if (folder_idx.isDirectory()) {
+            System.out.println("Inverted Index found"); //jika inv idx belum ada
+            invIndex.loadMaps();
+            invertedIndex = invIndex.getInvIndex();
+        } else {
+            System.out.println("Inverted Index not found, creating new.."); //jika inv idx sudah ada
+            invIndex.createInvertedIndex(findFilesInDirectory(System.getProperty("user.dir") + "\\cleaned_dataset\\"));
+            invIndex.saveMaps();
+            invIndex.loadMaps();
+            invertedIndex = invIndex.getInvIndex();
         }
     }
 
@@ -162,31 +164,39 @@ public class Mochi extends javax.swing.JFrame {
 
     private void orButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orButtonActionPerformed
         // TODO add your handling code here:
+        long start = System.currentTimeMillis();
         this.operasi = "OR";
         this.input = inputTextField.getText().split(" ");
+        
+        String tempt = "";
         
         this.result = new String[this.input.length];
         for(int i=0; i<this.input.length; i++){
             this.result[i] = dp.data_processing_query(this.input[i]);
         }
         
-        List<String> docContainer = new ArrayList<String>();
-        
+        Map<String, Integer> docContainer = new HashMap<String, Integer>();
         for(int i=0; i<this.input.length; i++){
             docContainer = invertedIndex.get(this.result[i]);
-            int h = 0;
-            if (docContainer.size() > 0) {
-                for (int j = 0; j < docContainer.size(); j++) {
-                    this.output += docContainer.get(j) + "\n";
-               }
-            }
-            docContainer.removeAll(docContainer);
-        }        
-        ResultForm rf = new ResultForm("","","");  
+            for (Map.Entry entry : docContainer.entrySet()) {
+                tempt = (String) entry.getKey();
+                this.output += tempt + "\n";
+            } 
+        }     
+        docContainer.clear();
+        try {  
+            ResultForm rf = new ResultForm("","","",0);
+        } catch (IOException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        long end = System.currentTimeMillis();
+        this.timer = (end-start)/1000f;
     }//GEN-LAST:event_orButtonActionPerformed
 
     private void andButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_andButtonActionPerformed
         // TODO add your handling code here:
+        
+        long start = System.currentTimeMillis();
         this.operasi = "AND";
         this.input = inputTextField.getText().split(" ");
         
@@ -195,27 +205,30 @@ public class Mochi extends javax.swing.JFrame {
             this.result[i] = dp.data_processing_query(this.input[i]);
         }
         
-        List<String> docContainer1 = new ArrayList<>();
-        List<String> docContainer2 = new ArrayList<>();
+        Map<String, Integer> docContainer1 = new HashMap<String, Integer>();
+        Map<String, Integer> docContainer2 = new HashMap<String, Integer>();
+        List<String> docContainer3 = null;
+        List<String> docContainer4 = null;
+//        Map<String, Integer> docContainerTempt = new HashMap<String, Integer>();
         List<String> docContainerTempt = new ArrayList<>();
         
         int length = this.input.length;
         for(int i=0; i<this.input.length; i++){
-            if(i==0){
-                
+            if(i==0){      
                 String s1 = this.result[i];
                 String s2 = this.result[i+=1];
                 docContainer1 = invertedIndex.get(s1);
                 docContainer2 = invertedIndex.get(s2);
-                
+                docContainer3 = new ArrayList(docContainer1.keySet());
+                docContainer4 = new ArrayList(docContainer2.keySet());
                     int idxKata1 = 0;
                     int idxKata2 = 0;
 
-                    while (idxKata1 < docContainer1.size() && idxKata2 < docContainer2.size()) {
-                        if (docContainer2.get(idxKata2).compareTo(docContainer1.get(idxKata1)) < 0) {
+                    while (idxKata1 < docContainer3.size() && idxKata2 < docContainer4.size()) {
+                        if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) < 0) {
                             idxKata2++;
-                        } else if (docContainer2.get(idxKata2).compareTo(docContainer1.get(idxKata1)) == 0) {
-                            docContainerTempt.add(docContainer2.get(idxKata2));
+                        } else if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) == 0) {
+                            docContainerTempt.add(docContainer4.get(idxKata2));
                             idxKata2++;
                             idxKata1++;
 
@@ -223,21 +236,22 @@ public class Mochi extends javax.swing.JFrame {
                             idxKata1++;
                         }
                     }
-                docContainer1.removeAll(docContainer1);
-                docContainer2 =  docContainerTempt;
+                docContainer3.clear();
+                docContainer4 =  docContainerTempt;
             } else if(i<=length) {
                 String s = this.result[i];
-                docContainer1 = invertedIndex.get(this.result[i]);
-                if (docContainer1.size() > docContainerTempt.size()) {
+                docContainer1 = invertedIndex.get(s);
+                docContainer3 = new ArrayList(docContainer1.keySet());
+                if (docContainer3.size() > docContainerTempt.size()) {
                     int idxKata1 = 0;
                     int idxKata2 = 0;
 
                     while (idxKata1 < docContainer1.size() && idxKata2 < docContainerTempt.size()) {
-                        if (docContainer2.get(idxKata2).compareTo(docContainer1.get(idxKata1)) < 0) {
-                            docContainerTempt.remove(docContainer2.get(idxKata2));
+                        if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) < 0) {
+                            docContainerTempt.remove(docContainer4.get(idxKata2));
                             idxKata2++;
-                        } else if (docContainer2.get(idxKata2).compareTo(docContainer1.get(idxKata1)) == 0) {
-                            docContainerTempt.add(docContainer2.get(idxKata2));
+                        } else if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) == 0) {
+                            docContainerTempt.add(docContainer4.get(idxKata2));
                             idxKata2++;
                             idxKata1++;
 
@@ -246,20 +260,29 @@ public class Mochi extends javax.swing.JFrame {
                         }
                     }
                 }
-                docContainer1.removeAll(docContainer1);
-                docContainer2 =  docContainerTempt;
+                docContainer1.clear();
+                docContainer4 =  docContainerTempt;
             }
         }
         for(int j=0; j<docContainerTempt.size(); j++){
             this.output += docContainerTempt.get(j) + "\n";
-        }   
-        ResultForm rf = new ResultForm("","","");  
+        }          
+        try {  
+            ResultForm rf = new ResultForm("","","",0);
+        } catch (IOException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        long end = System.currentTimeMillis();
+        this.timer = (end-start)/1000f;
     }//GEN-LAST:event_andButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         String result = "";
         String st = "";
+        if(this.operasi.equals("OR")||this.operasi.equals("")){
+            this.orButtonActionPerformed(evt);
+        }
 //        String tokens[] = this.output.split("\n");
 //        for(int i=0; i<tokens.length; i++){
 //             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset" + tokens[i]); 
@@ -275,9 +298,13 @@ public class Mochi extends javax.swing.JFrame {
 //                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //        }
-       
         this.setVisible(false);
-        ResultForm rf = new ResultForm(this.output, st, this.operasi);
+        ResultForm rf = null;
+        try {
+            rf = new ResultForm(this.output, st, this.operasi,this.timer);
+        } catch (IOException ex) {
+            Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+        }
         rf.setVisible(true); 
     }//GEN-LAST:event_searchButtonActionPerformed
 
@@ -311,7 +338,11 @@ public class Mochi extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Mochi().setVisible(true);
+                try {
+                    new Mochi().setVisible(true) ;
+                } catch (IOException ex) {
+                    Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
