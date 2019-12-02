@@ -33,9 +33,10 @@ public class Mochi extends javax.swing.JFrame {
     Map<String, Map<String, Integer>> invertedIndex = new TreeMap<String, Map<String, Integer>>();
     private String[] input = new String[]{};
     private String[] result = new String[]{};
+    private String[] tokens = new String[]{};
     private String output = "";
     private String operasi = "";
-    private float timer;
+    private double timer;
 
     /**
      * Creates new form Mochi
@@ -178,6 +179,7 @@ public class Mochi extends javax.swing.JFrame {
         Map<String, Integer> docContainer = new HashMap<String, Integer>();
         for(int i=0; i<this.input.length; i++){
             docContainer = invertedIndex.get(this.result[i]);
+            if(docContainer.size()<0)break;
             for (Map.Entry entry : docContainer.entrySet()) {
                 tempt = (String) entry.getKey();
                 this.output += tempt + "\n";
@@ -190,7 +192,7 @@ public class Mochi extends javax.swing.JFrame {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
         long end = System.currentTimeMillis();
-        this.timer = (end-start)/1000f;
+        this.timer = ((end-start)*1.0)/1000*1.0;
     }//GEN-LAST:event_orButtonActionPerformed
 
     private void andButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_andButtonActionPerformed
@@ -224,6 +226,7 @@ public class Mochi extends javax.swing.JFrame {
                     int idxKata1 = 0;
                     int idxKata2 = 0;
 
+                    if(docContainer3.size()<0&&docContainer4.size()<0)break;
                     while (idxKata1 < docContainer3.size() && idxKata2 < docContainer4.size()) {
                         if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) < 0) {
                             idxKata2++;
@@ -273,7 +276,7 @@ public class Mochi extends javax.swing.JFrame {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
         long end = System.currentTimeMillis();
-        this.timer = (end-start)/1000f;
+        this.timer = ((end-start)*1.0)/1000*1.0;
     }//GEN-LAST:event_andButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
@@ -283,21 +286,22 @@ public class Mochi extends javax.swing.JFrame {
         if(this.operasi.equals("OR")||this.operasi.equals("")){
             this.orButtonActionPerformed(evt);
         }
-//        String tokens[] = this.output.split("\n");
-//        for(int i=0; i<tokens.length; i++){
-//             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset" + tokens[i]); 
-//  
-//            try { 
-//                BufferedReader br = new BufferedReader(new FileReader(file));
-// 
-//                while ((br.readLine()) != null) 
-//                   st = br.readLine();
-//            } catch (FileNotFoundException ex) {
-//                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (IOException ex) {
-//                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        this.tokens = this.output.split("\n");
+        for(int i=0; i<tokens.length; i++){
+             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt"); 
+  
+            try { 
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                st += this.tokens[i] + "\n";
+                for(int j=0; j<1; j++){
+                    st += br.readLine() + "\n";
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         this.setVisible(false);
         ResultForm rf = null;
         try {

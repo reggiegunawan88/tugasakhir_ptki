@@ -5,7 +5,13 @@
  */
 package tugasakhir;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 
 /**
@@ -13,18 +19,20 @@ import javax.swing.JComboBox;
  * @author Dell
  */
 public class ResultForm extends javax.swing.JFrame {
-    private String output, operasi;
+    private String output, operasi, isiDoc;
     private String[] tokens;
-    private float timer;
+    private double timer;
+    isiDokumen isiDok;
     Mochi mochi;
 
     /**
      * Creates new form ResultForm
      */
-    public ResultForm(String output, String isiDoc, String operasi, float timer) throws IOException {
+    public ResultForm(String output, String isiDoc, String operasi, double timer) throws IOException {
         this.mochi = new Mochi();
         this.output = output;
         this.operasi = operasi;
+        this.isiDoc = isiDoc;
         initComponents();
         initDisplay();
         this.timer = timer;
@@ -38,7 +46,12 @@ public class ResultForm extends javax.swing.JFrame {
         }
         this.comboBoxTop.setSelectedItem(this.comboBoxTop.getSize());
         this.jLabel1.setText("Kueri dengan operasi " + this.operasi + " ditemukan pada dokumen :");
-        this.resultArea.setText(output);
+        if(isiDoc !=""){
+            this.resultArea.setText(isiDoc);
+        } else {
+            this.resultArea.setText("dokumen tidak ditemukan");
+        }
+        
         this.jLabel2.setText("waktu untuk memproses kueri: " + this.timer + " detik");
     }
 
@@ -58,6 +71,8 @@ public class ResultForm extends javax.swing.JFrame {
         comboBoxTop = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        textDoc = new javax.swing.JTextField();
+        lihatBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,6 +103,13 @@ public class ResultForm extends javax.swing.JFrame {
             }
         });
 
+        lihatBtn.setText("lihat");
+        lihatBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lihatBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -97,36 +119,47 @@ public class ResultForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(comboBoxTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
-                .addContainerGap())
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(comboBoxTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lihatBtn)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(comboBoxTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lihatBtn)
+                    .addComponent(textDoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addGap(44, 44, 44))
+                .addGap(34, 34, 34))
         );
 
         pack();
@@ -152,6 +185,28 @@ public class ResultForm extends javax.swing.JFrame {
         }
         this.resultArea.setText(this.output);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void lihatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lihatBtnActionPerformed
+        // TODO add your handling code here:
+        String doc = this.textDoc.getText();
+        String st = "";
+     
+        File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + doc + ".txt"); 
+  
+       try { 
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String res = "";
+            while ((res = br.readLine()) != null) 
+                st += res + "\n";
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        isiDok = new isiDokumen(st, doc);
+        isiDok.setVisible(true);
+    }//GEN-LAST:event_lihatBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,6 +250,8 @@ public class ResultForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton lihatBtn;
     private javax.swing.JTextArea resultArea;
+    private javax.swing.JTextField textDoc;
     // End of variables declaration//GEN-END:variables
 }
