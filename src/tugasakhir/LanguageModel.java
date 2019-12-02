@@ -35,7 +35,7 @@ public class LanguageModel {
     }
 
 //    public Map<String, Double> getResult(ArrayList namaDoc, ArrayList words) throws IOException {
-    public static Map<String, Double> getResult(ArrayList namaDoc, ArrayList words, Map<String, Map<String, Integer>> invertedIndex) throws IOException {
+    public static Map<Double, String> getResult(ArrayList namaDoc, ArrayList words, Map<String, Map<String, Integer>> invertedIndex) throws IOException {
 
         String dataset_path = System.getProperty("user.dir") + "\\cleaned_dataset\\";
         File folder = new File(dataset_path);
@@ -83,7 +83,7 @@ public class LanguageModel {
         }
         
         
-        Map<String, Double> nilaiOneDoc = new TreeMap<String, Double>();
+        Map<Double, String> nilaiOneDoc = new TreeMap<Double, String>();
         for (int i = 0; i < namaDoc.size(); i++) {
             String doc = (String) namaDoc.get(i);
             double res = 0;
@@ -97,7 +97,7 @@ public class LanguageModel {
                 }
                 
                 int totalWordInDoc = jumlahTotalWord.get(doc);
-                res = ((jumlahWordInOneDoc/totalWordInDoc) + (jumlahWord.get(word)/jumlahWordSemuaDoc))*lamda;
+                res = ((jumlahWordInOneDoc*1.0/totalWordInDoc*1.0) + (jumlahWord.get(word)*1.0/jumlahWordSemuaDoc*1.0))*lamda*1.0;
                 
                 if (jumlah == 0)
                 {
@@ -108,7 +108,7 @@ public class LanguageModel {
                     jumlah = jumlah * res;
                 }
             }
-            nilaiOneDoc.put(doc, jumlah);
+            nilaiOneDoc.put(jumlah, doc);
         }
         return nilaiOneDoc;
     }
@@ -144,20 +144,11 @@ public class LanguageModel {
         words.add("famin");
         words.add("barren");
 
-        Map<String, Double> res = getResult(namaDoc, words, invertedIndex);
+        Map<Double, String> res = getResult(namaDoc, words, invertedIndex);
         
         for (Map.Entry entry : res.entrySet()) {
             System.out.println("key: " + entry.getKey() + "; value: " + entry.getValue());
         }
     }
 }
-
-
-
-
-
-
-
-
-
 
