@@ -288,7 +288,8 @@ public class Mochi extends javax.swing.JFrame {
         }
         this.tokens = this.output.split("\n");
         for(int i=0; i<tokens.length; i++){
-             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset\\" + tokens[i] + ".txt"); 
+            String relative_path = System.getProperty("user.dir");
+             File file = new File(relative_path + "\\dataset\\" + tokens[i] + ".txt"); 
   
             try { 
                 BufferedReader br = new BufferedReader(new FileReader(file));
