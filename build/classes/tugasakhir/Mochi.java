@@ -35,7 +35,6 @@ public class Mochi extends javax.swing.JFrame {
     private String[] result = new String[]{};
     private String output = "";
     private String operasi = "";
-    private float timer;
 
     /**
      * Creates new form Mochi
@@ -164,7 +163,6 @@ public class Mochi extends javax.swing.JFrame {
 
     private void orButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orButtonActionPerformed
         // TODO add your handling code here:
-        long start = System.currentTimeMillis();
         this.operasi = "OR";
         this.input = inputTextField.getText().split(" ");
         
@@ -185,18 +183,14 @@ public class Mochi extends javax.swing.JFrame {
         }     
         docContainer.clear();
         try {  
-            ResultForm rf = new ResultForm("","","",0);
+            ResultForm rf = new ResultForm("","","");
         } catch (IOException ex) {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
-        long end = System.currentTimeMillis();
-        this.timer = (end-start)/1000f;
     }//GEN-LAST:event_orButtonActionPerformed
 
     private void andButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_andButtonActionPerformed
         // TODO add your handling code here:
-        
-        long start = System.currentTimeMillis();
         this.operasi = "AND";
         this.input = inputTextField.getText().split(" ");
         
@@ -248,10 +242,10 @@ public class Mochi extends javax.swing.JFrame {
 
                     while (idxKata1 < docContainer1.size() && idxKata2 < docContainerTempt.size()) {
                         if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) < 0) {
-                            docContainerTempt.remove(docContainer4.get(idxKata2));
+                            docContainerTempt.remove(docContainer2.get(idxKata2));
                             idxKata2++;
                         } else if (docContainer4.get(idxKata2).compareTo(docContainer3.get(idxKata1)) == 0) {
-                            docContainerTempt.add(docContainer4.get(idxKata2));
+                            docContainerTempt.get(docContainer2.get(idxKata2));
                             idxKata2++;
                             idxKata1++;
 
@@ -266,23 +260,18 @@ public class Mochi extends javax.swing.JFrame {
         }
         for(int j=0; j<docContainerTempt.size(); j++){
             this.output += docContainerTempt.get(j) + "\n";
-        }          
+        }   
         try {  
-            ResultForm rf = new ResultForm("","","",0);
+            ResultForm rf = new ResultForm("","","");
         } catch (IOException ex) {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
-        long end = System.currentTimeMillis();
-        this.timer = (end-start)/1000f;
     }//GEN-LAST:event_andButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         String result = "";
         String st = "";
-        if(this.operasi.equals("OR")||this.operasi.equals("")){
-            this.orButtonActionPerformed(evt);
-        }
 //        String tokens[] = this.output.split("\n");
 //        for(int i=0; i<tokens.length; i++){
 //             File file = new File("D:\\Kuliah\\PTKI\\tugasakhir_ptki\\dataset" + tokens[i]); 
@@ -301,7 +290,7 @@ public class Mochi extends javax.swing.JFrame {
         this.setVisible(false);
         ResultForm rf = null;
         try {
-            rf = new ResultForm(this.output, st, this.operasi,this.timer);
+            rf = new ResultForm(this.output, st, this.operasi);
         } catch (IOException ex) {
             Logger.getLogger(Mochi.class.getName()).log(Level.SEVERE, null, ex);
         }
